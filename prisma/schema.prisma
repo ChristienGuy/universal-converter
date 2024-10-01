@@ -5,7 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -18,6 +19,6 @@ model Object {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
-  // The volume of the object in cubic centimeters
+  // The volume of the object in cubic mm
   volume    Int
 }

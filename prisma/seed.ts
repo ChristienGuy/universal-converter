@@ -5,11 +5,11 @@ const prisma = new PrismaClient();
 const objectData: Prisma.ObjectCreateInput[] = [
   {
     name: "Olympic Swimming Pool",
-    volume: 50000,
+    volume: 500_000,
   },
   {
     name: "Bumblebee",
-    volume: 0.2,
+    volume: 2,
   },
 ];
 

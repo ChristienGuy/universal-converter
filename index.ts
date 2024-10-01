@@ -1,5 +1,6 @@
 import Fastify from "fastify";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import { searchRoute } from "./routes/search";
 
 const prisma = new PrismaClient();
 
@@ -7,9 +8,7 @@ const app = Fastify({
   logger: true,
 });
 
-app.get("/", async (request, reply) => {
-  return { hello: "world" };
-});
+app.register(searchRoute);
 
 app.get("/objects", async (request, reply) => {
   const objects = await prisma.object.findMany();
