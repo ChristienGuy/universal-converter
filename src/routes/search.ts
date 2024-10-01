@@ -9,9 +9,21 @@ export default async function searchRoute(app: FastifyTypeboxSchema) {
     "/search",
     {
       schema: {
+        tags: ["Search"],
+        description:
+          "Search for objects by name, only accepts whole word matches",
         querystring: Type.Object({
           q: Type.String(),
         }),
+        response: {
+          200: Type.Array(
+            Type.Object({
+              id: Type.String(),
+              name: Type.String(),
+              volume: Type.String(),
+            })
+          ),
+        },
       },
     },
     async (request, reply) => {
@@ -24,7 +36,10 @@ export default async function searchRoute(app: FastifyTypeboxSchema) {
         },
       });
 
-      return objects;
+      return objects.map((object) => ({
+        ...object,
+        volume: object.volume.toString(),
+      }));
     }
   );
 }
