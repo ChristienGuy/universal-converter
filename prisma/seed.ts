@@ -15,6 +15,10 @@ const objectData: Prisma.ObjectCreateInput[] = [
     name: "Baseball",
     volume: 216.505,
   },
+  {
+    name: "Honda Civic",
+    volume: 7989696,
+  },
 ];
 
 async function main() {
