@@ -12,9 +12,7 @@ const queryStringSchema = {
     },
   },
 } as const;
-/**
- * Encapsulates the search route
- */
+
 export async function searchRoute(
   app: FastifyJsonSchema,
   options: FastifyPluginOptions
