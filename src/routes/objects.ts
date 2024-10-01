@@ -13,14 +13,6 @@ const schema = {
         volume: Type.String(),
       })
     ),
-    404: Type.Object({
-      message: Type.String({
-        default: "Not found",
-      }),
-      code: Type.Integer({
-        default: 404,
-      }),
-    }),
   },
 };
 
@@ -38,10 +30,6 @@ export default async function objects(app: FastifyTypeboxSchema) {
           volume: true,
         },
       });
-
-      if (objects.length === 0) {
-        reply.notFound();
-      }
 
       reply.code(200).send(
         objects.map((object) => ({
