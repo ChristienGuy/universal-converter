@@ -5,7 +5,7 @@ import { Type } from "@sinclair/typebox";
 
 const prisma = new PrismaClient();
 
-export async function searchRoute(
+export default async function searchRoute(
   app: FastifyTypeboxSchema,
   options: FastifyPluginOptions
 ) {

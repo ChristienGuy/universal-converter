@@ -11,7 +11,7 @@ fastify.register(AutoLoad, {
 });
 
 fastify.listen(
-  { host: "::", port: Number(process.env.PORT) || 3000 },
+  { host: "::", port: Number(process.env.PORT) || 4000 },
   function (err, address) {
     if (err) {
       fastify.log.error(err);

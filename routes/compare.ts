@@ -7,7 +7,7 @@ import { getRandomObject } from "@prisma/client/sql";
 
 const prisma = new PrismaClient();
 
-export async function compareRoute(
+export default async function compareRoute(
   app: FastifyTypeboxSchema,
   _opts: FastifyPluginOptions
 ) {
