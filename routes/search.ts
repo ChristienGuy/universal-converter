@@ -1,27 +1,21 @@
 import { PrismaClient } from "@prisma/client";
 import { FastifyPluginOptions } from "fastify";
-import { FastifyJsonSchema } from "../types";
+import { FastifyTypeboxSchema } from "../types";
+import { Type } from "@sinclair/typebox";
 
 const prisma = new PrismaClient();
 
-const queryStringSchema = {
-  type: "object",
-  properties: {
-    q: {
-      type: "string",
-    },
-  },
-} as const;
-
 export async function searchRoute(
-  app: FastifyJsonSchema,
+  app: FastifyTypeboxSchema,
   options: FastifyPluginOptions
 ) {
   app.get(
     "/search",
     {
       schema: {
-        querystring: queryStringSchema,
+        querystring: Type.Object({
+          q: Type.String(),
+        }),
       },
     },
     async (request, reply) => {

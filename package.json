@@ -7,7 +7,8 @@
     "dev": "tsx watch ./index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node index.js",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate --sql",
+    "prisma:generate:watch": "prisma generate --sql --watch"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -16,7 +17,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@fastify/type-provider-json-schema-to-ts": "^4.0.0",
+    "@fastify/type-provider-typebox": "^5.0.0",
+    "@sinclair/typebox": "^0.33.12",
     "@prisma/client": "^5.20.0",
     "fastify": "^5.0.0"
   },

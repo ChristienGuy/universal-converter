@@ -1,78 +1,63 @@
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
-import { FastifyJsonSchema } from "../types";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { FastifyPluginOptions } from "fastify";
+import { PrismaClient } from "@prisma/client";
+import { Type } from "@sinclair/typebox";
+import { FastifyTypeboxSchema } from "../types";
+
+import { getRandomObject } from "@prisma/client/sql";
 
 const prisma = new PrismaClient();
 
-type Object = {
-  id: string;
-  name: string;
-  volume: Prisma.Decimal;
-};
-
-type CompareParams = {
-  a: string;
-  b: string;
-};
-
-type CompareReply = {
-  200: {
-    a: Object;
-    b: Object;
-    aInB: string;
-    bInA: string;
-  };
-  404: {
-    message: string;
-  };
-};
-
 export async function compareRoute(
-  app: FastifyInstance,
+  app: FastifyTypeboxSchema,
   _opts: FastifyPluginOptions
 ) {
-  app.get<{
-    Params: CompareParams;
-    Reply: CompareReply;
-  }>("/compare/:a/:b", async (request, reply) => {
-    const { a, b } = request.params;
-
-    const objectA = await prisma.object.findUnique({
-      where: {
-        id: a,
+  app.get(
+    "/compare/:a/:b",
+    {
+      schema: {
+        params: Type.Object({
+          a: Type.String(),
+          b: Type.String(),
+        }),
       },
-    });
+    },
+    async (request, reply) => {
+      const { a, b } = request.params;
 
-    const objectB = await prisma.object.findUnique({
-      where: {
-        id: b,
-      },
-    });
-
-    if (!objectA || !objectB) {
-      reply.code(404).send({
-        message: "Object not found",
+      const objectA = await prisma.object.findUnique({
+        where: {
+          id: a,
+        },
       });
-      return;
+
+      const objectB = await prisma.object.findUnique({
+        where: {
+          id: b,
+        },
+      });
+
+      if (!objectA || !objectB) {
+        reply.code(404).send({
+          message: "Object not found",
+        });
+        return;
+      }
+
+      const aInB = Number(objectB.volume) / Number(objectA.volume);
+      const bInA = Number(objectA.volume) / Number(objectB.volume);
+
+      reply.code(200).send({
+        a: objectA,
+        b: objectB,
+        aInB: aInB.toString(),
+        bInA: bInA.toString(),
+      });
     }
+  );
 
-    const aInB = Number(objectB.volume) / Number(objectA.volume);
-    const bInA = Number(objectA.volume) / Number(objectB.volume);
+  app.get("/compare/random", async (request, reply) => {
+    const results = await prisma.$queryRawTyped(getRandomObject());
 
-    reply.code(200).send({
-      a: objectA,
-      b: objectB,
-      aInB: aInB.toString(),
-      bInA: bInA.toString(),
-    });
-  });
-
-  app.get<{
-    Reply: CompareReply;
-  }>("/compare/random", async (request, reply) => {
-    const results = await prisma.$queryRaw<
-      Object[]
-    >`SELECT * FROM "Object" ORDER BY RANDOM() LIMIT 2`;
     const [objectA, objectB] = results;
 
     if (!objectA || !objectB) {

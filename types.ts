@@ -1,4 +1,4 @@
-import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
+import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 import {
   FastifyBaseLogger,
   FastifyInstance,
@@ -9,10 +9,10 @@ import {
 
 // Used to infer types from Json Schema
 // Allows you to use schema to validate route params _and_ provide typ safety
-export type FastifyJsonSchema = FastifyInstance<
+export type FastifyTypeboxSchema = FastifyInstance<
   RawServerDefault,
   RawRequestDefaultExpression<RawServerDefault>,
   RawReplyDefaultExpression<RawServerDefault>,
   FastifyBaseLogger,
-  JsonSchemaToTsProvider
+  TypeBoxTypeProvider
 >;

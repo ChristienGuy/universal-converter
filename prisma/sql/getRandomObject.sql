@@ -1,0 +1,1 @@
+SELECT * FROM "Object" ORDER BY random() LIMIT 2;
