@@ -4,5 +4,6 @@
     "outDir": "dist",
     "strict": true,
     "noStrictGenericChecks": false
-  }
+  },
+  "include": ["src/**/*.ts"]
 }

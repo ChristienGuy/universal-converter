@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch ./app.ts",
+    "dev": "tsx watch ./src/app.ts",
     "build": "prisma generate --sql && prisma migrate deploy && tsc -p tsconfig.json",
     "start": "node dist/app.js",
     "prisma:generate": "prisma generate --sql",
@@ -19,6 +19,7 @@
   "dependencies": {
     "@fastify/autoload": "^6.0.1",
     "@fastify/sensible": "^6.0.1",
+    "@fastify/swagger": "^9.1.0",
     "@fastify/type-provider-typebox": "^5.0.0",
     "@prisma/client": "^5.20.0",
     "@sinclair/typebox": "^0.33.12",
