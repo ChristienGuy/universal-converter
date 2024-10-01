@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Object" ALTER COLUMN "volume" SET DATA TYPE BIGINT;

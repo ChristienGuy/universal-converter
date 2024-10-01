@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 type Object = {
   id: string;
   name: string;
-  volume: number;
+  volume: bigint;
 };
 
 type CompareParams = {
