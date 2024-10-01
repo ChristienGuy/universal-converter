@@ -21,7 +21,8 @@ app.get("/objects", async (request, reply) => {
 async function start() {
   try {
     await app.listen({
-      port: 4000,
+      host: "::",
+      port: Number(process.env.PORT) || 4000,
     });
   } catch (error) {
     app.log.error(error);
