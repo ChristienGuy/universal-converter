@@ -37,9 +37,7 @@ export async function compareRoute(
       });
 
       if (!objectA || !objectB) {
-        reply.code(404).send({
-          message: "Object not found",
-        });
+        reply.notFound();
         return;
       }
 
