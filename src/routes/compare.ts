@@ -1,4 +1,3 @@
-import { FastifyPluginOptions } from "fastify";
 import { PrismaClient } from "@prisma/client";
 import { Type } from "@sinclair/typebox";
 import { FastifyTypeboxSchema } from "../types";
@@ -7,10 +6,7 @@ import { getRandomObject } from "@prisma/client/sql";
 
 const prisma = new PrismaClient();
 
-export default async function compareRoute(
-  app: FastifyTypeboxSchema,
-  _opts: FastifyPluginOptions
-) {
+export default async function compareRoute(app: FastifyTypeboxSchema) {
   app.get(
     "/compare/:a/:b",
     {
