@@ -1,13 +1,13 @@
 import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import { FastifyJsonSchema } from "../types";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 type Object = {
   id: string;
   name: string;
-  volume: bigint;
+  volume: Prisma.Decimal;
 };
 
 type CompareParams = {
@@ -56,8 +56,8 @@ export async function compareRoute(
       return;
     }
 
-    const aInB = objectB.volume / objectA.volume;
-    const bInA = objectA.volume / objectB.volume;
+    const aInB = Number(objectB.volume) / Number(objectA.volume);
+    const bInA = Number(objectA.volume) / Number(objectB.volume);
 
     reply.code(200).send({
       a: objectA,
@@ -70,8 +70,9 @@ export async function compareRoute(
   app.get<{
     Reply: CompareReply;
   }>("/compare/random", async (request, reply) => {
-    const results =
-      await prisma.$queryRaw`SELECT * FROM "Object" ORDER BY RANDOM() LIMIT 2`;
+    const results = await prisma.$queryRaw<
+      Object[]
+    >`SELECT * FROM "Object" ORDER BY RANDOM() LIMIT 2`;
     const [objectA, objectB] = results;
 
     if (!objectA || !objectB) {
@@ -81,8 +82,8 @@ export async function compareRoute(
       return;
     }
 
-    const aInB = objectB.volume / objectA.volume;
-    const bInA = objectA.volume / objectB.volume;
+    const aInB = Number(objectB.volume) / Number(objectA.volume);
+    const bInA = Number(objectA.volume) / Number(objectB.volume);
 
     reply.code(200).send({
       a: objectA,
