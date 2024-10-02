@@ -1,10 +1,15 @@
 import Fastify from "fastify";
 import { fastifySwagger } from "@fastify/swagger";
 import { fastifyAutoload } from "@fastify/autoload";
+import cors from "@fastify/cors";
 import { join } from "path";
 
 const fastify = Fastify({
   logger: true,
+});
+
+fastify.register(cors, {
+  origin: "*",
 });
 
 fastify.register(fastifySwagger, {
