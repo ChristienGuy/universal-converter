@@ -2,6 +2,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import { FastifyTypeboxSchema } from "../types";
 import { Type } from "@sinclair/typebox";
 import { adminPreHandler } from "../plugins/adminPreHandler";
+import { getAuth } from "@clerk/fastify";
 
 const prisma = new PrismaClient();
 

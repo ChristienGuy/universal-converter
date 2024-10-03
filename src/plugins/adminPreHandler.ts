@@ -5,9 +5,9 @@ export async function adminPreHandler(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const { sessionId } = getAuth(request);
+  const { orgRole } = getAuth(request);
 
-  if (!sessionId) {
+  if (orgRole !== "admin") {
     return reply.unauthorized();
   }
 }
