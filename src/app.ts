@@ -1,12 +1,16 @@
+import "dotenv/config";
 import Fastify from "fastify";
 import { fastifySwagger } from "@fastify/swagger";
 import { fastifyAutoload } from "@fastify/autoload";
 import cors from "@fastify/cors";
+import { clerkPlugin } from "@clerk/fastify";
 import { join } from "path";
 
 const fastify = Fastify({
   logger: true,
 });
+
+fastify.register(clerkPlugin);
 
 fastify.register(cors, {
   origin: "*",

@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { FastifyTypeboxSchema } from "../types";
 import { Type } from "@sinclair/typebox";
+import { adminPreHandler } from "../plugins/adminPreHandler";
 
 const prisma = new PrismaClient();
 
@@ -37,6 +38,7 @@ export default async function objects(app: FastifyTypeboxSchema) {
   app.post(
     "/objects",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["Objects"],
         description: "Create an object",
@@ -113,9 +115,45 @@ export default async function objects(app: FastifyTypeboxSchema) {
     }
   );
 
+  app.put(
+    `/objects/:id`,
+    {
+      preHandler: adminPreHandler,
+      schema: {
+        params: Type.Object({
+          id: Type.String(),
+        }),
+        body: Type.Object({
+          name: Type.String(),
+          volume: Type.String(),
+        }),
+      },
+    },
+    async (request, reply) => {
+      try {
+        await prisma.object.update({
+          data: request.body,
+          where: {
+            id: request.params.id,
+          },
+        });
+      } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          if (error.code === "P2025") {
+            return reply.notFound(
+              `Object with ID ${request.params.id} does not exist`
+            );
+          }
+        }
+
+        return reply.code(500).send();
+      }
+    }
+  );
   app.delete(
     `/objects/:id`,
     {
+      preHandler: adminPreHandler,
       schema: {
         params: Type.Object({
           id: Type.String({
