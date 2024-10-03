@@ -2,7 +2,6 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import { FastifyTypeboxSchema } from "../types";
 import { Type } from "@sinclair/typebox";
 import { adminPreHandler } from "../plugins/adminPreHandler";
-import { getAuth } from "@clerk/fastify";
 
 const prisma = new PrismaClient();
 
@@ -116,7 +115,7 @@ export default async function objects(app: FastifyTypeboxSchema) {
     }
   );
 
-  app.put(
+  app.patch(
     `/objects/:id`,
     {
       preHandler: adminPreHandler,
@@ -132,12 +131,14 @@ export default async function objects(app: FastifyTypeboxSchema) {
     },
     async (request, reply) => {
       try {
-        await prisma.object.update({
+        const updatedObject = await prisma.object.update({
           data: request.body,
           where: {
             id: request.params.id,
           },
         });
+
+        return reply.code(200).send(updatedObject);
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
           if (error.code === "P2025") {
