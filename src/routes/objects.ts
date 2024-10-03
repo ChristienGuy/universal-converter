@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { FastifyTypeboxSchema } from "../types";
 import { Type } from "@sinclair/typebox";
 
@@ -31,6 +31,41 @@ export default async function objects(app: FastifyTypeboxSchema) {
           volume: object.volume.toString(),
         }))
       );
+    }
+  );
+
+  app.post(
+    "/objects",
+    {
+      schema: {
+        tags: ["Objects"],
+        description: "Create an object",
+        body: Type.Object({
+          name: Type.String({
+            description: "The name of the object",
+          }),
+          volume: Type.Number({
+            description: "The volume of the object",
+          }),
+        }),
+        response: {
+          201: Type.Object({
+            id: Type.String(),
+            name: Type.String(),
+            volume: Type.String(),
+          }),
+        },
+      },
+    },
+    async (request, reply) => {
+      const object = await prisma.object.create({
+        data: request.body,
+      });
+
+      reply.code(201).send({
+        ...object,
+        volume: object.volume.toString(),
+      });
     }
   );
 
@@ -78,38 +113,37 @@ export default async function objects(app: FastifyTypeboxSchema) {
     }
   );
 
-  app.post(
-    "/objects",
+  app.delete(
+    `/objects/:id`,
     {
       schema: {
-        tags: ["Objects"],
-        description: "Create an object",
-        body: Type.Object({
-          name: Type.String({
-            description: "The name of the object",
-          }),
-          volume: Type.Number({
-            description: "The volume of the object",
+        params: Type.Object({
+          id: Type.String({
+            description: "The ID of the object",
           }),
         }),
-        response: {
-          201: Type.Object({
-            id: Type.String(),
-            name: Type.String(),
-            volume: Type.String(),
-          }),
-        },
       },
     },
     async (request, reply) => {
-      const object = await prisma.object.create({
-        data: request.body,
-      });
+      try {
+        await prisma.object.delete({
+          where: {
+            id: request.params.id,
+          },
+        });
 
-      reply.code(201).send({
-        ...object,
-        volume: object.volume.toString(),
-      });
+        return reply.code(204).send();
+      } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          if (error.code === "P2025") {
+            return reply.notFound(
+              `Object with ID ${request.params.id} does not exist`
+            );
+          }
+        }
+
+        return reply.code(500).send();
+      }
     }
   );
 }
