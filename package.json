@@ -4,11 +4,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch ./src/app.ts",
+    "dev:server": "tsx watch ./src/app.ts",
+    "dev:prisma": "prisma generate --sql --watch",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:prisma\"",
     "build": "prisma generate --sql && prisma migrate deploy && tsc -p tsconfig.json",
     "start": "node dist/app.js",
-    "prisma:generate": "prisma generate --sql",
-    "prisma:generate:watch": "prisma generate --sql --watch"
+    "generate:prisma": "prisma generate --sql",
+    "migrate:reset": "prisma migrate reset"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -32,6 +34,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.7.4",
+    "concurrently": "^9.0.1",
     "fastify-cli": "^7.0.1",
     "fastify-tsconfig": "^2.0.0",
     "prisma": "^5.20.0",
