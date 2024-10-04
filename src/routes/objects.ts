@@ -40,6 +40,7 @@ export default async function objects(app: FastifyTypeboxSchema) {
     {
       preHandler: adminPreHandler,
       schema: {
+        hide: true,
         tags: ["Objects"],
         description: "Create an object",
         body: Type.Object({
@@ -120,6 +121,7 @@ export default async function objects(app: FastifyTypeboxSchema) {
     {
       preHandler: adminPreHandler,
       schema: {
+        hide: true,
         params: Type.Object({
           id: Type.String(),
         }),
@@ -157,6 +159,7 @@ export default async function objects(app: FastifyTypeboxSchema) {
     {
       preHandler: adminPreHandler,
       schema: {
+        hide: true,
         params: Type.Object({
           id: Type.String({
             description: "The ID of the object",
