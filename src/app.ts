@@ -36,7 +36,7 @@ fastify.register(fastifyAutoload, {
 });
 
 fastify.register(require("@scalar/fastify-api-reference"), {
-  routePrefix: "/docs",
+  routePrefix: "/",
   configuration: {
     spec: {
       content: () => fastify.swagger(),
