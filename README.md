@@ -2,7 +2,7 @@
 
 A small and simple API to compare the total volume of two objects and convert between them.
 
-e.g How many bumblebee's is 1 Olympic Swimming Pool? (~840 million)
+e.g How many bees is 1 Olympic Swimming Pool? (~840 million)
 
 ## Development
 
