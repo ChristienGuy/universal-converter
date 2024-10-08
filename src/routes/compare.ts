@@ -82,12 +82,14 @@ export default async function compareRoute(app: FastifyTypeboxSchema) {
       const aInB = Number(objectB.volume) / Number(objectA.volume);
       const bInA = Number(objectA.volume) / Number(objectB.volume);
 
-      return reply.code(200).send({
+      const responseBody = {
         a: { ...objectA, volume: objectA.volume.toString() },
         b: { ...objectB, volume: objectB.volume.toString() },
         aInB: aInB.toString(),
         bInA: bInA.toString(),
-      });
+      };
+
+      return reply.code(200).send(responseBody);
     }
   );
 
@@ -112,12 +114,33 @@ export default async function compareRoute(app: FastifyTypeboxSchema) {
       const aInB = Number(objectB.volume) / Number(objectA.volume);
       const bInA = Number(objectA.volume) / Number(objectB.volume);
 
-      return reply.code(200).send({
+      const responseBody = {
         a: { ...objectA, volume: objectA.volume.toString() },
         b: { ...objectB, volume: objectB.volume.toString() },
         aInB: aInB.toString(),
         bInA: bInA.toString(),
-      });
+      };
+
+      try {
+        console.log("Creating usage log");
+
+        await prisma.aPIUsageLog.create({
+          data: {
+            endpoint: "/compare/random",
+            method: "GET",
+            requestBody: JSON.stringify(request.body),
+            requestParams: JSON.stringify(request.params),
+            requestQuery: JSON.stringify(request.query),
+            responseBody: JSON.stringify(responseBody),
+          },
+        });
+      } catch (error) {
+        // If storing usage fails we don't want to fail the request
+        // It's our problem, not the user's
+        console.error("Error in logging", error);
+      }
+
+      return reply.code(200).send(responseBody);
     }
   );
 }

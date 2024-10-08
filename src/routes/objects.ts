@@ -26,12 +26,27 @@ export default async function objects(app: FastifyTypeboxSchema) {
     async (request, reply) => {
       const objects = await prisma.object.findMany();
 
-      return reply.code(200).send(
-        objects.map((object) => ({
-          ...object,
-          volume: object.volume.toString(),
-        }))
-      );
+      const responseBody = objects.map((object) => ({
+        ...object,
+        volume: object.volume.toString(),
+      }));
+
+      try {
+        await prisma.aPIUsageLog.create({
+          data: {
+            endpoint: "/objects",
+            method: "GET",
+            requestBody: JSON.stringify(request.body),
+            requestParams: JSON.stringify(request.params),
+            requestQuery: JSON.stringify(request.query),
+            responseBody: JSON.stringify(responseBody),
+          },
+        });
+      } catch (error) {
+        console.error("Failed to create usage log", error);
+      }
+
+      return reply.code(200).send(responseBody);
     }
   );
 

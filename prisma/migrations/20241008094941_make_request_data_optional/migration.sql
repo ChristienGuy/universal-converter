@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "APIUsageLog" ALTER COLUMN "requestBody" DROP NOT NULL,
+ALTER COLUMN "requestParams" DROP NOT NULL,
+ALTER COLUMN "requestQuery" DROP NOT NULL,
+ALTER COLUMN "responseBody" DROP NOT NULL;
