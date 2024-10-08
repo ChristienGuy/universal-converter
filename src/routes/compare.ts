@@ -89,6 +89,25 @@ export default async function compareRoute(app: FastifyTypeboxSchema) {
         bInA: bInA.toString(),
       };
 
+      try {
+        console.log("Creating usage log");
+
+        await prisma.aPIUsageLog.create({
+          data: {
+            endpoint: "/compare/{a}/{b}",
+            method: "GET",
+            requestBody: JSON.stringify(request.body),
+            requestParams: JSON.stringify(request.params),
+            requestQuery: JSON.stringify(request.query),
+            responseBody: JSON.stringify(responseBody),
+          },
+        });
+      } catch (error) {
+        // If storing usage fails we don't want to fail the request
+        // It's our problem, not the user's
+        console.error("Error in logging", error);
+      }
+
       return reply.code(200).send(responseBody);
     }
   );

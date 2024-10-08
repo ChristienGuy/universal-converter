@@ -80,10 +80,29 @@ export default async function objects(app: FastifyTypeboxSchema) {
         data: request.body,
       });
 
-      return reply.code(201).send({
+      const responseBody = {
         ...object,
         volume: object.volume.toString(),
-      });
+      };
+
+      try {
+        await prisma.aPIUsageLog.create({
+          data: {
+            endpoint: "/objects",
+            method: "POST",
+            requestBody: JSON.stringify(request.body),
+            requestParams: JSON.stringify(request.params),
+            requestQuery: JSON.stringify(request.query),
+            responseBody: JSON.stringify(responseBody),
+          },
+        });
+      } catch (error) {
+        // If storing usage fails we don't want to fail the request
+        // It's our problem, not the user's
+        console.error("Error in logging", error);
+      }
+
+      return reply.code(201).send(responseBody);
     }
   );
 
@@ -124,10 +143,29 @@ export default async function objects(app: FastifyTypeboxSchema) {
         return;
       }
 
-      reply.code(200).send({
+      const responseBody = {
         ...object,
         volume: object.volume.toString(),
-      });
+      };
+
+      try {
+        await prisma.aPIUsageLog.create({
+          data: {
+            endpoint: "/objects/{id}",
+            method: "GET",
+            requestBody: JSON.stringify(request.body),
+            requestParams: JSON.stringify(request.params),
+            requestQuery: JSON.stringify(request.query),
+            responseBody: JSON.stringify(responseBody),
+          },
+        });
+      } catch (error) {
+        // If storing usage fails we don't want to fail the request
+        // It's our problem, not the user's
+        console.error("Error in logging", error);
+      }
+
+      reply.code(200).send(responseBody);
     }
   );
 
@@ -155,7 +193,26 @@ export default async function objects(app: FastifyTypeboxSchema) {
           },
         });
 
-        return reply.code(200).send(updatedObject);
+        const responseBody = updatedObject;
+
+        try {
+          await prisma.aPIUsageLog.create({
+            data: {
+              endpoint: "/objects/{id}",
+              method: "PATCH",
+              requestBody: JSON.stringify(request.body),
+              requestParams: JSON.stringify(request.params),
+              requestQuery: JSON.stringify(request.query),
+              responseBody: JSON.stringify(responseBody),
+            },
+          });
+        } catch (error) {
+          // If storing usage fails we don't want to fail the request
+          // It's our problem, not the user's
+          console.error("Error in logging", error);
+        }
+
+        return reply.code(200).send(responseBody);
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
           if (error.code === "P2025") {
@@ -189,6 +246,22 @@ export default async function objects(app: FastifyTypeboxSchema) {
             id: request.params.id,
           },
         });
+
+        try {
+          await prisma.aPIUsageLog.create({
+            data: {
+              endpoint: "/objects/{id}",
+              method: "DELETE",
+              requestBody: JSON.stringify(request.body),
+              requestParams: JSON.stringify(request.params),
+              requestQuery: JSON.stringify(request.query),
+            },
+          });
+        } catch (error) {
+          // If storing usage fails we don't want to fail the request
+          // It's our problem, not the user's
+          console.error("Error in logging", error);
+        }
 
         return reply.code(204).send();
       } catch (error) {
