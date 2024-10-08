@@ -26,7 +26,7 @@ export default async function objects(app: FastifyTypeboxSchema) {
     async (request, reply) => {
       const objects = await prisma.object.findMany();
 
-      reply.code(200).send(
+      return reply.code(200).send(
         objects.map((object) => ({
           ...object,
           volume: object.volume.toString(),
@@ -65,7 +65,7 @@ export default async function objects(app: FastifyTypeboxSchema) {
         data: request.body,
       });
 
-      reply.code(201).send({
+      return reply.code(201).send({
         ...object,
         volume: object.volume.toString(),
       });

@@ -72,19 +72,17 @@ export default async function compareRoute(app: FastifyTypeboxSchema) {
       });
 
       if (!objectA) {
-        reply.notFound(`Object with ID ${a} not found`);
-        return;
+        return reply.notFound(`Object with ID ${a} not found`);
       }
 
       if (!objectB) {
-        reply.notFound(`Object with ID ${b} not found`);
-        return;
+        return reply.notFound(`Object with ID ${b} not found`);
       }
 
       const aInB = Number(objectB.volume) / Number(objectA.volume);
       const bInA = Number(objectA.volume) / Number(objectB.volume);
 
-      reply.code(200).send({
+      return reply.code(200).send({
         a: { ...objectA, volume: objectA.volume.toString() },
         b: { ...objectB, volume: objectB.volume.toString() },
         aInB: aInB.toString(),
@@ -108,14 +106,13 @@ export default async function compareRoute(app: FastifyTypeboxSchema) {
       const [objectA, objectB] = results;
 
       if (!objectA || !objectB) {
-        reply.notFound("Objects not found");
-        return;
+        return reply.notFound("Objects not found");
       }
 
       const aInB = Number(objectB.volume) / Number(objectA.volume);
       const bInA = Number(objectA.volume) / Number(objectB.volume);
 
-      reply.code(200).send({
+      return reply.code(200).send({
         a: { ...objectA, volume: objectA.volume.toString() },
         b: { ...objectB, volume: objectB.volume.toString() },
         aInB: aInB.toString(),

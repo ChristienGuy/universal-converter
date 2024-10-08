@@ -15,10 +15,31 @@ datasource db {
 }
 
 model Object {
+  id          String        @id @default(uuid())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  name        String
+  // The volume of the object in cubic cm
+  volume      Decimal
+  ActivityLog ActivityLog[]
+}
+
+model ActivityLog {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String
-  // The volume of the object in cubic cm
-  volume    Decimal
+  // The object that was acted upon
+  object    Object   @relation(fields: [objectId], references: [id])
+  // The type of action that was performed
+  action    Action
+  // The user that performed the action
+  user      String
+  objectId  String
+}
+
+enum Action {
+  CREATE
+  RETRIEVE
+  UPDATE
+  DELETE
 }
