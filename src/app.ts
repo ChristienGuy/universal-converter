@@ -5,7 +5,6 @@ import { fastifyAutoload } from "@fastify/autoload";
 import cors from "@fastify/cors";
 import { clerkPlugin } from "@clerk/fastify";
 import { join } from "path";
-import { title } from "process";
 
 const fastify = Fastify({
   logger: true,
