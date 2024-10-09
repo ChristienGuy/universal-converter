@@ -5,6 +5,7 @@ import { fastifyAutoload } from "@fastify/autoload";
 import cors from "@fastify/cors";
 import { clerkPlugin } from "@clerk/fastify";
 import { join } from "path";
+import { title } from "process";
 
 const fastify = Fastify({
   logger: true,
@@ -38,6 +39,7 @@ fastify.register(fastifyAutoload, {
 fastify.register(require("@scalar/fastify-api-reference"), {
   routePrefix: "/",
   configuration: {
+    title: "Universal Converter",
     spec: {
       content: () => fastify.swagger(),
     },
